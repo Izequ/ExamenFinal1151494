@@ -1,6 +1,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.*;
 
 
@@ -22,7 +23,15 @@ public class Persona implements Serializable {
 
 	private String nombre;
 
-	private int sorteo;
+	
+	//bi-directional many-to-one association to Boleta
+	@OneToMany(mappedBy="personaBean")
+	private List<Boleta> boletas;
+
+	//bi-directional many-to-one association to Sorteo
+	@ManyToOne
+	@JoinColumn(name="sorteo")
+	private Sorteo sorteoBean;
 
 	public Persona() {
 	}
@@ -59,12 +68,34 @@ public class Persona implements Serializable {
 		this.nombre = nombre;
 	}
 
-	public int getSorteo() {
-		return this.sorteo;
+	public List<Boleta> getBoletas() {
+		return this.boletas;
+	}
+	
+	public void setBoletas(List<Boleta> boletas) {
+		this.boletas = boletas;
 	}
 
-	public void setSorteo(int sorteo) {
-		this.sorteo = sorteo;
+	public Boleta addBoleta(Boleta boleta) {
+		getBoletas().add(boleta);
+		boleta.setPersonaBean(this);
+
+		return boleta;
 	}
+
+	public Boleta removeBoleta(Boleta boleta) {
+		getBoletas().remove(boleta);
+		boleta.setPersonaBean(null);
+
+		return boleta;
+	}
+	public Sorteo getSorteoBean() {
+		return this.sorteoBean;
+	}
+
+	public void setSorteoBean(Sorteo sorteoBean) {
+		this.sorteoBean = sorteoBean;
+	}
+
 
 }

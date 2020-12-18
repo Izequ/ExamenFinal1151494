@@ -14,11 +14,15 @@ public class Numero implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 
-	private int boleta;
-
 	private String numero;
+
+	//bi-directional many-to-one association to Boleta
+	@ManyToOne
+	@JoinColumn(name="boleta")
+	private Boleta boletaBean;
 
 	public Numero() {
 	}
@@ -31,20 +35,20 @@ public class Numero implements Serializable {
 		this.id = id;
 	}
 
-	public int getBoleta() {
-		return this.boleta;
-	}
-
-	public void setBoleta(int boleta) {
-		this.boleta = boleta;
-	}
-
 	public String getNumero() {
 		return this.numero;
 	}
 
 	public void setNumero(String numero) {
 		this.numero = numero;
+	}
+
+	public Boleta getBoletaBean() {
+		return this.boletaBean;
+	}
+
+	public void setBoletaBean(Boleta boletaBean) {
+		this.boletaBean = boletaBean;
 	}
 
 }

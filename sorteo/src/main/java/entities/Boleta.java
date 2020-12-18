@@ -3,6 +3,7 @@ package entities;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 
 /**
@@ -15,6 +16,7 @@ public class Boleta implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 
 	private int boleta;
@@ -23,9 +25,19 @@ public class Boleta implements Serializable {
 
 	private int ganadora;
 
-	private int persona;
+	//bi-directional many-to-one association to Persona
+	@ManyToOne
+	@JoinColumn(name="persona")
+	private Persona personaBean;
 
-	private int sorteo;
+	//bi-directional many-to-one association to Sorteo
+	@ManyToOne
+	@JoinColumn(name="sorteo")
+	private Sorteo sorteoBean;
+
+	//bi-directional many-to-one association to Numero
+	@OneToMany(mappedBy="boletaBean")
+	private List<Numero> numeros;
 
 	public Boleta() {
 	}
@@ -62,20 +74,42 @@ public class Boleta implements Serializable {
 		this.ganadora = ganadora;
 	}
 
-	public int getPersona() {
-		return this.persona;
+	public Persona getPersonaBean() {
+		return this.personaBean;
 	}
 
-	public void setPersona(int persona) {
-		this.persona = persona;
+	public void setPersonaBean(Persona personaBean) {
+		this.personaBean = personaBean;
 	}
 
-	public int getSorteo() {
-		return this.sorteo;
+	public Sorteo getSorteoBean() {
+		return this.sorteoBean;
 	}
 
-	public void setSorteo(int sorteo) {
-		this.sorteo = sorteo;
+	public void setSorteoBean(Sorteo sorteoBean) {
+		this.sorteoBean = sorteoBean;
+	}
+
+	public List<Numero> getNumeros() {
+		return this.numeros;
+	}
+
+	public void setNumeros(List<Numero> numeros) {
+		this.numeros = numeros;
+	}
+
+	public Numero addNumero(Numero numero) {
+		getNumeros().add(numero);
+		numero.setBoletaBean(this);
+
+		return numero;
+	}
+
+	public Numero removeNumero(Numero numero) {
+		getNumeros().remove(numero);
+		numero.setBoletaBean(null);
+
+		return numero;
 	}
 
 }
